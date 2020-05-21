@@ -1,18 +1,100 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <main>
+        <v-touch class="mobile-touch" @pinchin="zoom('out')" @pinchout="zoom('in')">
+            <div id="preventScrolling" class="diagram_container">
+                <div class="infoBox">
+                    <div class="holder">
+                        <div class="circle green"></div> <span>Zakończone</span>
+                    </div>
+                    <div class="holder">
+                        <div class="circle red"></div> <span>Nominowany</span>
+                    </div>
+                </div>
+                <Diagram ref="mobileZoom"/>
+            </div>
+        </v-touch>
+
+        <Features/>
+        <Footer/>
+
+    </main>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Diagram from "@/components/Diagram.vue";
+import Features from "@/components/Features.vue";
+import Footer from "@/components/Footer.vue";
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
+    name: 'Home',
+    data() {
+        return {
+            interval:false,
+        };
+    },
+    components: {
+        Diagram,
+        Features,
+        Footer,
+    },
+    methods: {
+        driagramPreventScroll(e) {
+            e.preventDefault();
+        },
+        zoom(mode) {
+            this.$refs.mobileZoom.mobileZoomFunc(mode);
+        }
+    },
+    mounted() {
+        document.querySelector('#preventScrolling').addEventListener('wheel', this.driagramPreventScroll);
+    },
+    destroyed () {
+        document.querySelector('#preventScrolling').removeEventListener('wheel', this.driagramPreventScroll);
+    },
+};
 </script>
+
+<style lang="scss" scoped>
+
+    .mobile-touch {
+        position:relative;
+        width:100%;
+        height:80%;
+        overflow:hidden;
+    }
+
+    .diagram_container {
+        position:relative;
+        width:100%;
+        height:100%;
+        overflow:hidden;
+
+        .infoBox {
+            font-family: Glenn-Sans;
+            position:absolute;
+            top:10px;
+            left:10px;
+            font-size:14px;
+            display:flex;
+            flex-direction: column;
+            z-index:20;
+
+            .holder {
+                display:flex;
+                flex-direction: row;
+                align-items: center;
+                margin-bottom:10px;
+
+                .circle {
+                    width:25px;
+                    height:25px;
+                    border-radius:50%;
+                    margin-right:5px;
+                }
+                .green { background:#08A045; }
+
+                .red { background: #E9190F; }
+            }
+        }
+    }
+</style>
