@@ -19,27 +19,40 @@ export default {
     },
     data() {
         return {
-            diagramZoom: DataStore.data.diagramZoom,
-            zoomValue: DataStore.data.zoomValue,
-            mobileZoom: DataStore.data.mobileZoom,
-            mobileZoomValue: DataStore.data.mobileZoomValue,
-            divider: DataStore.data.divider,
+            diagramZoom: null,
+            zoomValue: null,
+            mobileZoom: null,
+            mobileZoomValue: null,
+            divider: null,
 
-            treeData: DataStore.data.treeData,
-            participants: DataStore.data.participants,
+            treeData: null,
+            participants: null,
+
+            percentageX: 50,
         };
     },
     methods: {
+        fetchData() {
+            this.diagramZoom = DataStore.data.diagramZoom,
+            this.zoomValue = DataStore.data.zoomValue,
+            this.mobileZoom = DataStore.data.mobileZoom,
+            this.mobileZoomValue = DataStore.data.mobileZoomValue,
+            this.divider = DataStore.data.divider,
+            this.treeData = DataStore.data.treeData;
+            this.participants = DataStore.data.participants;
+            setTimeout(this.recolorParticipants, 1);
+            setTimeout(this.rescalePage, 1);
+        },
         mobileZoomFunc(mode) {
             if(mode == "in") this.mobileZoom = this.mobileZoom + this.mobileZoomValue;
             else this.mobileZoom = this.mobileZoom - this.mobileZoomValue
             document.querySelector('#diagram').style.zoom = this.mobileZoom;
         },
         checkClick(event) {
-            if(event.target.classList.contains('extend_handle')) {
+            if(event.target.classList.contains('extend_handle')) { // Ponowne przekolorowanie odpowiedzi przy zamknięciu gałęzi
                 this.recolorParticipants();
             }
-            let object = event.target.parentElement.parentElement
+            let object = event.target.parentElement.parentElement;
 
             if(object.classList.contains('person'))
             {
@@ -68,14 +81,81 @@ export default {
         handleScroll(event) {
             if(event.wheelDeltaY == 120 || event.deltaY == -3 ) {
                 this.diagramZoom = this.diagramZoom + this.zoomValue;
-            } else if((event.wheelDeltaY == -120  || event.deltaY == 3) && this.diagramZoom > 0.35) {
+                this.zoomToCursor("in",event)
+            } else if((event.wheelDeltaY == -120  || event.deltaY == 3) && this.diagramZoom > 0.25) {
                 this.diagramZoom = this.diagramZoom - this.zoomValue;
+                this.zoomToCursor("out",event);
             }
 
             document.querySelector('#diagram').style.zoom = this.diagramZoom;
 
             document.querySelector('#diagram').style.cssText += "-moz-transform:scale(" + this.diagramZoom + ")";
             document.querySelector('#diagram').style.cssText += "-moz-transform-origin: top left";
+        },
+        zoomToCursor(mode,event) {
+            let windowWidth = window.innerWidth;
+            let windowHeight = document.querySelector('#diagram-scroll').getBoundingClientRect().height;
+            let diagram = document.querySelector("#diagram-scroll");
+            let valueX = 300;
+            let valueY = 100;
+            let divider = 8;
+
+            if(mode == "in") {
+                if(event.screenX < windowWidth/2) // kliknięcie w lewo
+                {
+                    if(event.screenY < windowHeight/2) {
+                        //console.log("lewo góra");
+                        diagram.scrollLeft -= valueX / divider;
+                        diagram.scrollTop -= valueY;
+                    }
+                    else if(event.screenY > windowHeight/2) {
+                        //console.log("lewo dół");
+                        diagram.scrollLeft -= valueX / divider;
+                        diagram.scrollTop += valueY;
+                    }
+                }
+                else if(event.screenX > windowWidth/2)  // kliknięcie w prawo
+                {
+                    if(event.screenY < windowHeight/2) {
+                        //console.log("prawo góra");
+                        diagram.scrollLeft += valueX;
+                        diagram.scrollTop -= valueY;
+                    }
+                    else if(event.screenY > windowHeight/2) {
+                        //console.log("prawo dół");
+                        diagram.scrollLeft += valueX;
+                        diagram.scrollTop += valueY;
+                    }
+                }
+            }
+            else if(mode == "out") {
+                if(event.screenX < windowWidth/2) // kliknięcie w lewo
+                {
+                    if(event.screenY < windowHeight/2) {
+                        //console.log("lewo góra");
+                        diagram.scrollLeft += valueX / divider;
+                        diagram.scrollTop -= valueY;
+                    }
+                    else if(event.screenY > windowHeight/2) {
+                        //console.log("lewo dół");
+                        diagram.scrollLeft += valueX / divider;
+                        diagram.scrollTop -= valueY;
+                    }
+                }
+                else if(event.screenX > windowWidth/2)  // kliknięcie w prawo
+                {
+                    if(event.screenY < windowHeight/2) {
+                       //console.log("prawo góra");
+                        diagram.scrollLeft -= valueX;
+                        diagram.scrollTop -= valueY;
+                    }
+                    else if(event.screenY > windowHeight/2) {
+                        //console.log("prawo dół");
+                        diagram.scrollLeft -= valueX;
+                        diagram.scrollTop -= valueY;
+                    }
+                }
+            }
         },
         rescalePage() {
             if(window.screen.width < 768) {
@@ -91,37 +171,10 @@ export default {
             }
             let width = document.querySelector("#diagram").getBoundingClientRect().width;
             let content = document.querySelector("#diagram-scroll");
-            // let page = document.querySelector("#diagram-scroll").getBoundingClientRect().width;
             content.scrollLeft += width / DataStore.data.divider;
-
-            // let loop = true;
-            // let start = 200;
-            // let startSize = 1400;
-
-            // console.log(width, page);
-            // // Psuedopozycjonowanie -> Zrobić jeszcze skalowanie przy powiększaniu diagramu bo aktualnie powiększa poprawnie tylko na szerokości która jest przy aktualnym drzewku
-
-            // while(loop) {
-            //     if(page <= start)
-            //     {
-            //         console.log(startSize);
-            //         content.scrollLeft += startSize;
-            //         loop = false;
-            //     } else {
-            //         start = start + 100;
-            //         startSize = startSize - 50;
-            //     }
-            // }
-            // content.scrollLeft += width / DataStore.data.divider;
-
-            // Wyświetlacz 200 - scrollLeft 1400
-            // Wyświetlacz 1000 - scrollLeft 1000
-            // Wyświetlacz 1900 - scorllLeft 550
         },
     },
     mounted() {
-        this.recolorParticipants();
-        this.rescalePage();
         document.querySelector('#diagram-scroll').addEventListener('wheel', this.handleScroll);
     },
     destroyed () {
@@ -131,6 +184,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+    #diagram {
+    }
 
     .diagram {
         position: relative;
@@ -147,6 +203,7 @@ export default {
         width:100% !important;
         margin-top:10px;
         margin-bottom:-100px;
+        transform-origin: 50% 50%;
     }
 
     .person {
@@ -167,6 +224,11 @@ export default {
 
     .avat:hover ~ .name {
         margin-top:10px;
+    }
+
+    img {
+        width: 70px !important;
+        height: 70px !important;
     }
 
     .name {

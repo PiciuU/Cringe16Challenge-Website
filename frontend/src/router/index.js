@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import axios from 'axios'
 import Home from '../views/Home.vue'
-import Answer from '../components/Answer.vue'
-import List from '../components/List.vue'
+import Admin from '../views/Admin.vue'
+import Login from '../views/Login.vue'
 
+import Application from '../components/Application.vue'
 
 Vue.use(VueRouter)
 
@@ -14,16 +16,52 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: '/answer',
-    name: 'Answer',
-    component: Answer
+    path: '/application',
+    name: 'Application',
+    component: Application
   },
   {
-    path: '/lista',
-    name: 'List',
-    component: List
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      guardLogin(to, from, next);
+    }
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin,
+    beforeEnter: (to, from, next) => {
+      guard(to, from, next);
+    }
   },
 ]
+
+const guard = function(to, from, next) {
+  axios.get('/api/admin/token/check')
+  .then(() => {
+    next();
+  })
+  .catch(() => {
+    window.location.href = "/login";
+  })
+};
+
+const guardLogin = function(to, from, next) {
+  if(localStorage.getItem('usertoken')) {
+    axios.get('/api/admin/token/check')
+    .then(() => {
+      window.location.href = "/admin";
+    })
+    .catch(() => {
+      next();
+    })
+  }
+  else {
+    next();
+  }
+};
 
 const router = new VueRouter({
   mode: 'history',

@@ -1,10 +1,10 @@
 <template>
     <footer>
-        <div class="f_author">
-            <div class="author_text">Strona stworzona przez piciuhombre</div>
+        <div class="ownership">
+            <div class="owner">Strona stworzona przez piciuhombre</div>
             <div class="property">Własność DreamSpeak & ALPHACK</div>
         </div>
-        <div class="f_media">
+        <div class="copyright">
             <span>Wszelkie prawa zastrzeżone &copy; 2020</span>
         </div>
     </footer>
@@ -28,8 +28,8 @@ export default {
         align-items:center;
         font-family: Montserrat;
 
-        .f_author {
-            .author_text {
+        .ownership {
+            .owner {
                 font-size:24px;
                 font-weight:bold;
             }
@@ -38,7 +38,7 @@ export default {
             }
         }
 
-        .f_media {
+        .copyright {
             span {
                 font-weight: bold;
             }
