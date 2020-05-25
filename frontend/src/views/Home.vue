@@ -1,6 +1,6 @@
 <template>
     <main>
-        <v-touch class="mobile-touch" @pinchin="zoom('out')" @pinchout="zoom('in')">
+        <v-touch class="mobile-touch" @pinchin="mobileZoom('out')" @pinchout="mobileZoom('in')">
             <div id="preventScrolling" class="diagram_container">
                 <div class="infoBox">
                     <div class="holder">
@@ -10,17 +10,26 @@
                         <div class="circle red"></div> <span>Nominowany</span>
                     </div>
                 </div>
-                <Diagram ref="mobileZoom"/>
+                <Diagram ref="diagram"/>
             </div>
         </v-touch>
 
-        <Features/>
+        <Features ref="features"/>
         <Footer/>
+
+        <transition name="fade">
+            <div v-if="showAdminModal" id="modal">
+                <div class="header">Powiadomienie</div>
+                <div class="content">Masz oczekujące zgłoszenia w panelu admina.</div>
+            </div>
+        </transition>
 
     </main>
 </template>
 
 <script>
+import axios from 'axios';
+import DataStore from '@/store/dataStore';
 import Diagram from "@/components/Diagram.vue";
 import Features from "@/components/Features.vue";
 import Footer from "@/components/Footer.vue";
@@ -29,7 +38,7 @@ export default {
     name: 'Home',
     data() {
         return {
-            interval:false,
+            showAdminModal: false,
         };
     },
     components: {
@@ -41,11 +50,35 @@ export default {
         driagramPreventScroll(e) {
             e.preventDefault();
         },
-        zoom(mode) {
-            this.$refs.mobileZoom.mobileZoomFunc(mode);
+        mobileZoom(mode) {
+            this.$refs.diagram.mobileZoomFunc(mode);
+        },
+        async storeData() {
+            await DataStore.fetchData()
+            this.$refs.diagram.fetchData();
+            this.$refs.features.fetchData();
+        },
+        showModal() {
+            if(localStorage.getItem('usertoken')) {
+                axios.get('/api/data/applications')
+                .then((response) =>{
+                    if(response.data.length > 0)
+                    {
+                       this.showAdminModal = true;
+                       setTimeout(() => { this.showAdminModal = false; },3000);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+            }
         }
     },
+    created() {
+        this.storeData();
+    },
     mounted() {
+        this.showModal();
         document.querySelector('#preventScrolling').addEventListener('wheel', this.driagramPreventScroll);
     },
     destroyed () {
@@ -61,6 +94,34 @@ export default {
         width:100%;
         height:80%;
         overflow:hidden;
+    }
+
+    #modal {
+        width:250px;
+        min-height:20px;
+        position:fixed;
+        top:10px;
+        right:10px;
+        z-index:2;
+        font-family:Montserrat;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+        transition: all .5s ease-in-out;
+
+        .header{
+            background-color:#34495e;
+            color:white;
+            font-weight: bold;
+            text-align:center;
+            padding:5px;
+        }
+
+        .content{
+            border-bottom: 3px solid #EFEFEF;
+            background:#EFEFEF;
+            font-size:14px;
+            padding:5px;
+            text-align: center;
+        }
     }
 
     .diagram_container {
@@ -91,10 +152,18 @@ export default {
                     border-radius:50%;
                     margin-right:5px;
                 }
-                .green { background:#08A045; }
 
+                .green { background:#08A045; }
                 .red { background: #E9190F; }
             }
         }
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
     }
 </style>

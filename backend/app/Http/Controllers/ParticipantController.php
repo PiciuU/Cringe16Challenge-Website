@@ -33,8 +33,15 @@ class ParticipantController extends Controller
         return response()->json(compact('request'), 201);
     }
 
-    public function list() {
-        $list = Participant::all();
-        return response()->json(compact('list'));
+    public function applications() {
+        $data = Participant::where('status','=',0)->get();
+        return response()->json($data);
+    }
+
+    public function closeApplication(Request $request) {
+        $application = Participant::find($request->id);
+        $application->status = 1;
+        $application->save();
+        return response()->json(['success' => 'Poprawnie zamknięto oczekujące zgłoszenie!'], 200);
     }
 }
