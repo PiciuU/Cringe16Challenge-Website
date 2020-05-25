@@ -106,7 +106,7 @@ export default {
             }
 
             .application {
-                font-size:18px;
+                font-size:20px;
                 font-family: Montserrat-Bold;
 
                 a {
@@ -281,17 +281,27 @@ export default {
     @media (max-width:1024px) {
         .features_container {
             height:80%;
-            min-height:500px;
+            min-height:850px;
             flex-direction: column;
 
             .about_challenge {
                 width:100%;
                 padding:0px 20px;
                 align-items:center;
-                margin-top:20px;
 
                 .title {
-                    font-size:34px;
+                    padding-top:10px;
+                    font-size:80px;
+                }
+
+                .subtitle {
+                    font-size:26px;
+                }
+
+                .application {
+                    margin-top:20px;
+                    text-align:center;
+                    font-size:38px;
                 }
             }
 
@@ -300,22 +310,76 @@ export default {
                 padding:0;
 
                 .last-answer {
+
+                    width: 100%;
+                    max-width:unset;
+
                     .reply_title {
-                        font-size:24px;
+                        font-size:48px;
                         margin-bottom:20px;
                     }
 
                     .video {
-                        width: 85%;
+                        height:75%;
+                        width: 70%;
+                        max-width:unset;
+                    }
+                }
+
+                .nominations {
+                    div  {
+                        font-size:64px;
                     }
                 }
             }
         }
     }
 
-    @media (max-width:360px) {
+    @media (max-width:768px) {
+        .features_container {
+            min-height:550px;
+
+            .about_challenge {
+
+                .title {
+                    font-size:60px;
+                }
+
+                .subtitle {
+                    font-size:18px;
+                }
+
+                .application {
+                    font-size:26px;
+                }
+            }
+
+            .media {
+
+                .last-answer {
+
+                    .reply_title {
+                        font-size:42px;
+                    }
+
+                    .video {
+                        height:60%;
+                    }
+                }
+
+                .nominations {
+                    div  {
+                        font-size:48px;
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width:600px) {
         .features_container > .about_challenge {
             .title {
+                margin-top:5px;
                 font-size:30px;
             }
             .subtitle {
@@ -325,9 +389,20 @@ export default {
                 font-size:16px;
             }
         }
-        .features_container > .media {
-            .nominations > div {
-                font-size:28px;
+        .features_container {
+            .media {
+
+                .last-answer {
+                    .reply_title {
+                        font-size:24px;
+                    }
+                    .video {
+                        width:90%;
+                    }
+                }
+                .nominations > div {
+                    font-size:28px;
+                }
             }
         }
     }

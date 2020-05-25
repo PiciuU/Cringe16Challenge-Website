@@ -1,6 +1,6 @@
 <template>
     <div v-dragscroll="true" id="diagram-scroll" class="diagram" @click="checkClick">
-        <TreeChart id="diagram" :json="treeData"/>
+        <TreeChart id="diagram" data-aos="fade" data-aos-once="true" data-aos-duration="750" data-aos-easing="ease-in-out" :json="treeData"/>
     </div>
 </template>
 
@@ -184,9 +184,6 @@ export default {
 </script>
 
 <style lang="scss">
-
-    #diagram {
-    }
 
     .diagram {
         position: relative;

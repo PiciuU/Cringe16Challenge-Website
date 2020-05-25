@@ -1,6 +1,6 @@
 <template>
     <main>
-        <form v-if="!sent" id="contact" v-on:submit.prevent="sendAnswer">
+        <form v-if="!sent" id="contact" v-on:submit.prevent="sendAnswer"  data-aos="zoom-in-down" data-aos-once="true" data-aos-duration="750" data-aos-easing="ease-in-out">
             <div class="title">#cringe16challenge</div>
             <label>Zgłoszenie odpowiedzi na nominacje</label>
             <input placeholder="Twoja nazwa" type="text" name="name" v-model="credentials.name" required>
@@ -13,7 +13,7 @@
             <span class="error" v-if="criticalError">Wystąpił błąd przy wysyłaniu! Spróbuj ponownie później lub skontaktuj się z administratorem strony.</span>
         </form>
         <transition name="fade">
-            <div v-if="sent" id="contact">
+            <div v-if="sent" id="contact"  data-aos="zoom-out" data-aos-once="true" data-aos-duration="1000" data-aos-easing="ease-in-out">
                 <div class="success">
                     <span class="success_title">Twoja odpowiedź została przekazana do weryfikacji!</span>
                     <span class="reminder">Pamiętaj aby do opisu filmu umieścić poniższy tekst: <br><br>
@@ -189,6 +189,7 @@ export default {
             min-height:420px;
             box-shadow: none;
             padding:0;
+            padding:5px;
 
             input[type="text"],button[type="submit"] {
                 width:90%;

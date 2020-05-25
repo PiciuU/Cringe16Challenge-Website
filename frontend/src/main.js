@@ -3,9 +3,11 @@ import App from './App.vue'
 import router from './router'
 import axios from 'axios'
 import store from './store'
-import VueDragscroll from 'vue-dragscroll';
-import VueTouch from 'vue-touch';
-import uploader from 'vue-simple-uploader'
+import VueDragscroll from 'vue-dragscroll'; // Bibloteka do przesuwania diagramu myszką
+import VueTouch from 'vue-touch'; // Biblioteka do wykrywania gestów na telefonie
+import uploader from 'vue-simple-uploader' // Biblioteka do Uploadu zdjęć
+import AOS from "aos"; // Biblioteka Animation On Scroll
+import "aos/dist/aos.css"; // Biblioteka Animation On Scroll
 
 
 axios.defaults.baseURL = 'https://cringe16.dream-speak.pl/public';
@@ -17,7 +19,6 @@ axios.interceptors.request.use(
       if (token) {
           request.headers['Authorization'] = 'Bearer ' + token;
       }
-      // config.headers['Content-Type'] = 'application/json';
       return request;
   },
   error => {
@@ -89,14 +90,17 @@ axios.interceptors.response.use(
     subscribers.map(cb => cb());
   }
 
-Vue.use(VueDragscroll); // Używane
-Vue.use(VueTouch); // Używane
-Vue.use(uploader)
+Vue.use(VueDragscroll);
+Vue.use(VueTouch);
+Vue.use(uploader);
 
 
 Vue.config.productionTip = false
 
 new Vue({
+  created() {
+    AOS.init();
+  },
   router,
   store,
   render: h => h(App)

@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div class="login-page">
+        <div class="login-page"  data-aos="fade" data-aos-once="true" data-aos-duration="500" data-aos-easing="ease-in-out">
             <div v-on:submit.prevent="login" class="form">
                 <div class="title">Logowanie do panelu admina</div>
                 <form>

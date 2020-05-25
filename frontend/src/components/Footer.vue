@@ -52,9 +52,39 @@ export default {
             flex-direction: column;
             text-align:center;
 
-            .f_author {
+            .ownership {
+                .owner {
+                    font-size:28px;
+                }
                 .property {
+                    font-size:20px;
                     margin-top:5px;
+                }
+            }
+
+            .copyright {
+                span {
+                    font-size:20px;
+                }
+            }
+        }
+    }
+
+    @media (max-width:600px) {
+         footer {
+
+            .ownership {
+                .owner {
+                    font-size:22px;
+                }
+                .property {
+                    font-size:16px;
+                }
+            }
+
+            .copyright {
+                span {
+                    font-size:16px;
                 }
             }
         }

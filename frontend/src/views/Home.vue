@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <main data-aos="fade" data-aos-once="true" data-aos-duration="500">
         <v-touch class="mobile-touch" @pinchin="mobileZoom('out')" @pinchout="mobileZoom('in')">
             <div id="preventScrolling" class="diagram_container">
                 <div class="infoBox">

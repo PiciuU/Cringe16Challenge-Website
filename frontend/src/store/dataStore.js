@@ -19,7 +19,6 @@ export default {
 
     // Pobieranie danych z bazy i ich przypisanie do magazynu
     fetchData() {
-        // console.log(JSON.stringify(this.datas.treeData));
         return axios.get('/api/data')
         .then((response) =>{
             this.data.diagramZoom = parseFloat(response.data[0].diagram_zoom);
