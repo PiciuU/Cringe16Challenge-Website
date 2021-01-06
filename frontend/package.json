@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "aos": "^2.3.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.4",
     "iframe-resizer": "^4.2.10",
     "v-scroll-lock": "^1.2.0",
